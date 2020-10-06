@@ -1,0 +1,156 @@
+<html>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script
+        src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {
+						var resultElement = $('#resultDiv');
+						resultElement.html('');
+						$('#btnSubmit')
+								.click(
+										function() {
+
+											var city = $('#city');
+									        city.html('');
+
+									        var sunrise;
+									        var sunset;
+
+									        var getCountry = $('#getCountry').val();
+
+									        var Data;
+									        Data = {
+									           name: getCountry
+									        }
+									        $
+									            .ajax({
+									                url: '/api/search',
+									                method: 'get',
+									                data: Data,
+									                dataType: 'json',
+									                success: function(
+									                    response) {
+									                    if (response.message != null) {
+									                        resultElement
+									                            .html(response.message);
+									                    } else {
+
+									                        var countriesData = response.Response;
+									                        var resultHtml = '';
+									                        for (index = 0; index < countriesData.length; index++) {
+									                            resultHtml +=  '<div class=\"panel-heading\" align=\"center\">Country: <u><b>' +
+									                                response.Response[index].Name +
+									                                        '</b></u><div class=\"panel-body\" align=\"center\">' +
+									                                '<table class="table">' +
+									                                                '<tbody>' +
+									                                '<tr> <td> NativeName</td><td> ' + response.Response[index].NativeName + '</td></tr>' +
+									                                '<tr> <td> Region</td><td> ' + response.Response[index].Region + '</td></tr>' +
+									                                '<tr><td> SubRegion:</td><td> ' + response.Response[index].SubRegion + '</td></tr>' +
+									                                '<tr><td> CurrencySymbol:</td><td> ' + response.Response[index].CurrencySymbol+ ' </td> </tr>' +
+									                                '<tr><td> CurrencyName:</td><td> ' + response.Response[index].CurrencyName + ' </td></tr>' +
+									                                '<tr><td> NativeLanguage:</td><td> ' + response.Response[index].NativeLanguage + '</td></tr>' +
+									                                '<tr><td> Flag :</td><td> ' + '<img src=\"' + response.Response[index].FlagPng + '\" width=\"50\" height=\"30\"/>' + '</td> </tr>' +
+									                                '</tbody> </table>' +
+									                                '</div><div class=\"panel-body\"></div>';
+
+									                        }
+									                        resultHtml += '</div>';
+
+									                        resultElement
+									                            .html('<div class=\"panel panel-default\">' + resultHtml
+									                                + '</div>'
+									                            );
+									                    }
+									                },
+									                error: function(err) {
+									                    alert(err.message);
+									                }
+									            });
+
+										});
+					});
+
+</script>
+
+<script type="text/javascript">
+function clearAll() {
+	  document.getElementById("getCountry").value="";
+	  document.getElementById("lat").value="";
+	  document.getElementById("lon").value="";
+}
+
+</script>
+
+
+<head>
+    <title>Know Your Countries!</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+table, th, td {
+	border: 1px solid black;
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="jumbotron jumbotron-fluid text-center" style="background-color:b2c5f7;" height="100">
+    <h1><u><i>Know your Countries!</i></u></h1>
+</div>
+
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-5">
+        <div class="panel panel-default">
+            <div class="panel-heading" align="center">Country Name
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control"
+                                   placeholder="Enter Country Name" name="getCountry" id="getCountry"/>
+                        </div>
+                    </div>
+                    <div>&nbsp;</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-primary btn-block" onclick="clearAll()"
+                                    id="btnClear" align="center">Clear
+                            </button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-primary btn-block" type="submit"
+                                    id="btnSubmit" align="center">Submit
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-5">
+        <div id="resultDiv"></div>
+    </div>
+    <div class="col-sm-5"></div>
+</div>
+
+</body>
+</html>
